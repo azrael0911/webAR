@@ -12,7 +12,7 @@
     </head>
 
     <body style="margin: 0; overflow: hidden;">
-        <!-- <a-scene
+        <a-scene
             vr-mode-ui="enabled: false;"
             loading-screen="enabled: false;"
             renderer="logarithmicDepthBuffer: true;"
@@ -28,7 +28,7 @@
                 ></a-asset-item>
             </a-assets>
 
-            <a-marker
+            <!-- <a-marker
                 id="animated-marker"
                 type="pattern"
                 preset="custom"
@@ -46,11 +46,19 @@
                     class="clickable"
                     gesture-handler
                 ></a-entity>
-            </a-marker>
+            </a-marker> -->
+            <a-entity
+                id="bowser-model"
+                scale="0.7951844697335845 0.7951844697335845 0.7951844697335845"
+                animation-mixer="loop: repeat"
+                gltf-model="#animated-asset"
+                class="clickable"
+                gesture-handler
+            ></a-entity>
 
             <a-entity camera></a-entity>
-        </a-scene> -->
-        <a-scene>
+        </a-scene>
+        <!-- <a-scene>
             <a-assets>
                 <img id="boxTexture" src="https://i.imgur.com/mYmmbrp.jpg">
             </a-assets>
@@ -83,6 +91,6 @@
                 });
               }
             });
-         </script>
+         </script> -->
     </body>
 </html>
