@@ -12,58 +12,44 @@
     </head>
 
     <body style="margin: 0; overflow: hidden;">
-        <a-scene
-            vr-mode-ui="enabled: false;"
-            loading-screen="enabled: false;"
-            renderer="logarithmicDepthBuffer: true;"
-            arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-            id="scene"
-            embedded
-            gesture-detector
-        >
+        <div class="over">
+            <span id="promptText">Tap To Place Model</span>
+          </div>
+          
+          <!-- Add the tap-place component to the scene so it has an effect -->
+          <a-scene
+            tap-place
+            landing-page
+            xrextras-loading
+            xrextras-runtime-error
+            renderer="colorManagement:true"
+            xrweb="
+              allowedDevices: any;
+              defaultEnvironmentFogIntensity: 0.5; 
+              defaultEnvironmentFloorTexture: #groundTex; 
+              defaultEnvironmentFloorColor: #FFF;
+              defaultEnvironmentSkyBottomColor: #B4C4CC; 
+              defaultEnvironmentSkyTopColor: #5ac8fa;
+              defaultEnvironmentSkyGradientStrength: 0.5;">
+          
+            <!-- We can define assets here to be loaded when A-Frame initializes -->
             <a-assets>
-                <a-asset-item
-                    id="animated-asset"
-                    src="assets/asset.glb"
-                ></a-asset-item>
+              <img id="groundTex" src="assets/sand.jpg">
+              <a-asset-item id="cactusModel" src="assets/asset.glb"></a-asset-item>
             </a-assets>
-
-            <!-- <a-marker
-                id="animated-marker"
-                type="pattern"
-                preset="custom"
-                url="assets/marker.patt"
-                raycaster="objects: .clickable"
-                emitevents="true"
-                cursor="fuse: false; rayOrigin: mouse;"
-                id="markerA"
-            >
-                <a-entity
-                    id="bowser-model"
-                    scale="0.7951844697335845 0.7951844697335845 0.7951844697335845"
-                    animation-mixer="loop: repeat"
-                    gltf-model="#animated-asset"
-                    class="clickable"
-                    gesture-handler
-                ></a-entity>
-            </a-marker> -->
-            <a-entity
-                scale="0.7951844697335845 0.7951844697335845 0.7951844697335845"
-                animation-mixer="loop: repeat"
-                gltf-model="#animated-asset"
-                class="clickable"
-                gesture-handler
-            ></a-entity>
+          
+            <!-- The raycaster will emit mouse events on scene objects specified with the cantap class -->
             <a-camera
-                id="camera"
-                position="0 8 8"
-                raycaster="objects: .cantap"
-                cursor="
+              id="camera"
+              position="0 8 8"
+              raycaster="objects: .cantap"
+              cursor="
                 fuse: false;
                 rayOrigin: mouse;">
             </a-camera>
+          
             <a-entity
-                light="
+              light="
                 type: directional;
                 intensity: 0.8;
                 castShadow: true;
@@ -74,44 +60,72 @@
                 shadowCameraRight: 40;
                 shadowCameraLeft: -40;
                 target: #camera"
-                xrextras-attach="target: camera; offset: 8 15 4"
-                position="1 4.3 2.5"
-                shadow>
+              xrextras-attach="target: camera; offset: 8 15 4"
+              position="1 4.3 2.5"
+              shadow>
             </a-entity>
-        </a-scene>
-        <!-- <a-scene>
-            <a-assets>
-                <img id="boxTexture" src="https://i.imgur.com/mYmmbrp.jpg">
-            </a-assets>
-        
-            <a-box
-                src="#boxTexture"
-                position="0 2 -5"
-                rotation="0 45 45"
-                scale="2 2 2"
-                animation__position="property: object3D.position.y; to: 2.2; dir: alternate; dur: 2000; loop: true"
-                animation__mouseenter="property: scale; to: 2.3 2.3 2.3; dur: 300; startEvents: mouseenter"
-                animation__mouseleave="property: scale; to: 2 2 2; dur: 300; startEvents: mouseleave">
-            </a-box>
-        
-            <a-entity camera></a-entity>
-            <a-sound src="https://cdn.aframe.io/basic-guide/audio/backgroundnoise.wav" autoplay="true" position="-3 1 -4"></a-sound>
-            
-        </a-scene>
-        <script>
-            AFRAME.registerComponent('scale-on-mouseenter', {
-              schema: {
-                to: {default: '2.5 2.5 2.5', type: 'vec3'}
-              },
           
-              init: function () {
-                var data = this.data;
-                var el = this.el;
-                this.el.addEventListener('mouseenter', function () {
-                  el.object3D.scale.copy(data.to);
-                });
-              }
-            });
-         </script> -->
+            <a-light type="ambient" intensity="0.5"></a-light>
+          
+            <!-- Adding the cantap class allows the ground to be clicked -->
+            <a-box
+              id="ground"
+              class="cantap"
+              scale="1000 2 1000"
+              position="0 -0.99 0"
+              material="shader: shadow; transparent: true; opacity: 0.4"
+              shadow>
+            </a-box>
+          </a-scene>
+          <script>
+            export const tapPlaceComponent = {
+                schema: {
+                    min: {default: 6},
+                    max: {default: 10},
+                },
+                init() {
+                    const ground = document.getElementById('ground')
+                    this.prompt = document.getElementById('promptText')
+                    
+                    ground.addEventListener('click', (event) => {
+                    // Dismiss the prompt text.
+                    this.prompt.style.display = 'none'
+                    
+                    // Create new entity for the new object
+                    const newElement = document.createElement('a-entity')
+
+                    // The raycaster gives a location of the touch in the scene
+                    const touchPoint = event.detail.intersection.point
+                    newElement.setAttribute('position', touchPoint)
+
+                    const randomYRotation = Math.random() * 360
+                    newElement.setAttribute('rotation', `0 ${randomYRotation} 0`)
+
+                    const randomScale = Math.floor(Math.random() * (Math.floor(this.data.max) - Math.ceil(this.data.min)) + Math.ceil(this.data.min))
+
+                    newElement.setAttribute('visible', 'false')
+                    newElement.setAttribute('scale', '0.0001 0.0001 0.0001')
+
+                    newElement.setAttribute('shadow', {
+                        receive: false,
+                    })
+
+                    newElement.setAttribute('gltf-model', '#cactusModel')
+                    this.el.sceneEl.appendChild(newElement)
+
+                    newElement.addEventListener('model-loaded', () => {
+                        // Once the model is loaded, we are ready to show it popping in using an animation
+                        newElement.setAttribute('visible', 'true')
+                        newElement.setAttribute('animation', {
+                        property: 'scale',
+                        to: `${randomScale} ${randomScale} ${randomScale}`,
+                        easing: 'easeOutElastic',
+                        dur: 800,
+                        })
+                    })
+                    })
+                },
+                }
+          </script>
     </body>
 </html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script> -->
+        <!-- <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+        <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
+        <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
+        <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script> -->
+        <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+        <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+        
+    </head>
+
+    <body style="margin: 0; overflow: hidden;">
+        <a-scene
+            vr-mode-ui="enabled: false;"
+            loading-screen="enabled: false;"
+            renderer="logarithmicDepthBuffer: true;"
+            arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+            id="scene"
+            embedded
+            gesture-detector
+        >
+            <a-assets>
+                <a-asset-item
+                    id="animated-asset"
+                    src="assets/asset.glb"
+                ></a-asset-item>
+            </a-assets>
+
+            <!-- <a-marker
+                id="animated-marker"
+                type="pattern"
+                preset="custom"
+                url="assets/marker.patt"
+                raycaster="objects: .clickable"
+                emitevents="true"
+                cursor="fuse: false; rayOrigin: mouse;"
+                id="markerA"
+            >
+                <a-entity
+                    id="bowser-model"
+                    scale="0.7951844697335845 0.7951844697335845 0.7951844697335845"
+                    animation-mixer="loop: repeat"
+                    gltf-model="#animated-asset"
+                    class="clickable"
+                    gesture-handler
+                ></a-entity>
+            </a-marker> -->
+            <a-entity
+                scale="0.7951844697335845 0.7951844697335845 0.7951844697335845"
+                animation-mixer="loop: repeat"
+                gltf-model="#animated-asset"
+                class="clickable"
+                gesture-handler
+            ></a-entity>
+            <a-camera></a-camera>
+        </a-scene>
+        <!-- <a-scene>
+            <a-assets>
+                <img id="boxTexture" src="https://i.imgur.com/mYmmbrp.jpg">
+            </a-assets>
+        
+            <a-box
+                src="#boxTexture"
+                position="0 2 -5"
+                rotation="0 45 45"
+                scale="2 2 2"
+                animation__position="property: object3D.position.y; to: 2.2; dir: alternate; dur: 2000; loop: true"
+                animation__mouseenter="property: scale; to: 2.3 2.3 2.3; dur: 300; startEvents: mouseenter"
+                animation__mouseleave="property: scale; to: 2 2 2; dur: 300; startEvents: mouseleave">
+            </a-box>
+        
+            <a-entity camera></a-entity>
+            <a-sound src="https://cdn.aframe.io/basic-guide/audio/backgroundnoise.wav" autoplay="true" position="-3 1 -4"></a-sound>
+            
+        </a-scene>
+        <script>
+            AFRAME.registerComponent('scale-on-mouseenter', {
+              schema: {
+                to: {default: '2.5 2.5 2.5', type: 'vec3'}
+              },
+          
+              init: function () {
+                var data = this.data;
+                var el = this.el;
+                this.el.addEventListener('mouseenter', function () {
+                  el.object3D.scale.copy(data.to);
+                });
+              }
+            });
+         </script> -->
+    </body>
+</html>
