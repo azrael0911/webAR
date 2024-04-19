@@ -47,20 +47,37 @@
                     gesture-handler
                 ></a-entity>
             </a-marker> -->
-            <a-gltf-model src="#animated-asset">
-
-            </a-gltf-model>
-            <!-- <a-entity
-                id="animated-asset"
+            <a-entity
                 scale="0.7951844697335845 0.7951844697335845 0.7951844697335845"
                 animation-mixer="loop: repeat"
                 gltf-model="#animated-asset"
                 class="clickable"
                 gesture-handler
-            ></a-entity> -->
-
-            <a-entity camera></a-entity>
-            <a-camera></a-camera>
+            ></a-entity>
+            <a-camera
+                id="camera"
+                position="0 8 8"
+                raycaster="objects: .cantap"
+                cursor="
+                fuse: false;
+                rayOrigin: mouse;">
+            </a-camera>
+            <a-entity
+                light="
+                type: directional;
+                intensity: 0.8;
+                castShadow: true;
+                shadowMapHeight:2048;
+                shadowMapWidth:2048;
+                shadowCameraTop: 40;
+                shadowCameraBottom: -40;
+                shadowCameraRight: 40;
+                shadowCameraLeft: -40;
+                target: #camera"
+                xrextras-attach="target: camera; offset: 8 15 4"
+                position="1 4.3 2.5"
+                shadow>
+            </a-entity>
         </a-scene>
         <!-- <a-scene>
             <a-assets>
